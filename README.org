@@ -2,16 +2,16 @@
 #+AUTHOR:Mehmet Tekman
 #+OPTIONS: org-startup-with-inline-images t
 
-* Wireguard Config Maker
-
 This tool quickly generates config files for multiple Wireguard
-clients, connected to each other in a way specified in a legible
-table.
+clients, connected to each other in a way specified in a single table.
 
 #+NAME:Config
 |           |          MainIP |              wa0 |                   ha0 |        hp0 |        gs0 | Public |
+|-----------+-----------------+------------------+-----------------------+------------+------------+--------|
 | [Tunnel]  |                 |        work area |             home area |  homeproxy | gamestream |        |
+|-----------+-----------------+------------------+-----------------------+------------+------------+--------|
 | [Port]    |                 |            58210 |                 58211 |      58214 |      58254 |        |
+|-----------+-----------------+------------------+-----------------------+------------+------------+--------|
 | [Target]  |                 | conker,bigbertha | all,-gemini,-alcatraz |        all |     conker |        |
 |-----------+-----------------+------------------+-----------------------+------------+------------+--------|
 | alcatraz  | 190.239.111.210 |       10.10.10.1 |            11.11.11.1 |            |            | Yes    |
@@ -51,7 +51,6 @@ subnet needs to be.
   tree outputs
 #+end_src
 
-#+RESULTS:
 #+begin_example
 outputs
 |-- alcatraz
@@ -79,7 +78,7 @@ outputs
 8 directories, 14 files
 #+end_example
 
-* Prerequisites
+*** Prerequisites
 
 You will need to install: =wireguard-tools graphviz python-graphviz=
 
@@ -90,8 +89,8 @@ You will need to install: =wireguard-tools graphviz python-graphviz=
 
 This document was written initially in org-mode via Emacs. One needs
 to only change the table above and then hit =C-c C-c= in the [[Code]]
-section below. A new [[file:wireguard.png][wireguard.png]] image will be created, along with
-output files in the =outputs= folder.
+section below. A new image will be created, along with output files in
+the =outputs= folder.
 
 These can then be installed on the target machines in a similar manner
 as that outlined in the [[Installation]] section below.
@@ -381,7 +380,6 @@ Check the outputs
   tree outputs
 #+end_src
 
-#+RESULTS:
 #+begin_example
 outputs
 |-- alcatraz
