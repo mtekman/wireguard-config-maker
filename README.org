@@ -291,12 +291,14 @@ Then generate the client configs and network map
           return(31 - floor(log2(npeers + 2)))
 
       def generateAllowedIPs(self, tunnelname):
+          ## This is the internal IP of this client for that tunnel
           ## Allowed IPs must each have /32 subnet when specified individually
-          ips = [self.config_map[tunnelname]["address"]+ "/32"]
-          for peer in self.config_map[tunnelname]["peers"]:
-              peer_addr = peer.config_map[tunnelname]["address"]
-              ips += [peer_addr + "/32"]
-          self.allowed_ips = ", ".join(sorted(ips))
+          ##ips = [self.config_map[tunnelname]["address"]+ "/32"]
+          ##for peer in self.config_map[tunnelname]["peers"]:
+          ##    peer_addr = peer.config_map[tunnelname]["address"]
+          ##    ips += [peer_addr + "/32"]
+          ##self.allowed_ips = ", ".join(sorted(ips))
+          self.allowed_ips = self.config_map[tunnelname]["address"]+ "/32"
 
       def generateConfig(self, tunnelname, output_dir):
           self.generateAllowedIPs(tunnelname)
