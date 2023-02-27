@@ -175,7 +175,7 @@ Then generate the client configs and network map
                          target_peer=["all"], nontarget_peer=[]):
           A_is_target = (A.name in target_peer or target_peer==["all"]) and (A.name not in nontarget_peer)
           B_is_target = (B.name in target_peer or target_peer==["all"]) and (B.name not in nontarget_peer)
-        
+
           nd1 = Graph.new_node(A, tport, tname, A_is_target)
           nd2 = Graph.new_node(B, tport, tname, B_is_target)
           Graph.new_edge(nd1, nd2, tname)
@@ -222,7 +222,7 @@ Then generate the client configs and network map
               targs = [x.strip() for x in targets.split(",")]
               self.target_peer = [x for x in targs if x[0] != "-"]
               self.nontarget_peer = [x[1:] for x in targs if x[0] == "-"]
-        
+
           self.peers = {}
           self.peers_resolved = False
           Graph.new_tunnel(name, port)
@@ -250,7 +250,7 @@ Then generate the client configs and network map
                       peerb.addPeer(self.name, peera)
                       Graph.new_connection(peera, peerb, self.name, self.listen,
                                            self.target_peer, self.nontarget_peer)
-                    
+
           self.peers_resolved = True
 
       def generatePeerConfigs(self, output_dir):
@@ -290,18 +290,7 @@ Then generate the client configs and network map
           npeers = len(self.config_map[tunnelname]["peers"])
           return(31 - floor(log2(npeers + 2)))
 
-      def generateAllowedIPs(self, tunnelname):
-          ## This is the internal IP of this client for that tunnel
-          ## Allowed IPs must each have /32 subnet when specified individually
-          ##ips = [self.config_map[tunnelname]["address"]+ "/32"]
-          ##for peer in self.config_map[tunnelname]["peers"]:
-          ##    peer_addr = peer.config_map[tunnelname]["address"]
-          ##    ips += [peer_addr + "/32"]
-          ##self.allowed_ips = ", ".join(sorted(ips))
-          self.allowed_ips = self.config_map[tunnelname]["address"]+ "/32"
-
       def generateConfig(self, tunnelname, output_dir):
-          self.generateAllowedIPs(tunnelname)
           self.subnetmask = str(self.determineSubnetMask(tunnelname)) ## for network
 
           tunnel = tunnel_map[tunnelname]
@@ -319,7 +308,7 @@ Then generate the client configs and network map
   [Peer]
   # Name = %s
   PublicKey = %s
-  AllowedIPs = %s''' % (peer.name, peer.public_key, self.allowed_ips)
+  AllowedIPs = %s''' % (peer.name, peer.public_key, peer.config_map[tunnelname]["address"]+ "/32")
 
                   if peer.is_public:
                       text += "\nEndpoint = %s:%s" % (peer.main_ip, tunnel.listen)
