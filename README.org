@@ -6,22 +6,20 @@ This tool quickly generates config files for multiple Wireguard
 clients, connected to each other in a way specified in a single table.
 
 #+NAME:Config
-|           |          MainIP |              wa0 |                   ha0 |        hp0 |        gs0 | Public |
-|-----------+-----------------+------------------+-----------------------+------------+------------+--------|
-| [Tunnel]  |                 |        work area |             home area |  homeproxy | gamestream |        |
-|-----------+-----------------+------------------+-----------------------+------------+------------+--------|
-| [Port]    |                 |            58210 |                 58211 |      58214 |      58254 |        |
-|-----------+-----------------+------------------+-----------------------+------------+------------+--------|
-| [Target]  |                 | conker,bigbertha | all,-gemini,-alcatraz |        all |     conker |        |
-|-----------+-----------------+------------------+-----------------------+------------+------------+--------|
-| alcatraz  | 190.239.111.210 |       10.10.10.1 |            11.11.11.1 |            |            | Yes    |
-| bigbertha | 190.239.111.110 |       10.10.10.2 |                       | 14.14.14.2 |            | Yes    |
-| conker    | 190.239.111.111 |       10.10.10.3 |                       |            | 54.54.54.3 | Yes    |
-| dilinger  |  192.168.178.25 |                  |            11.11.11.4 |            | 54.54.54.4 | No     |
-| echtart   |  192.168.178.11 |                  |            11.11.11.5 | 14.14.14.5 | 54.54.54.5 | No     |
-| frostlos  |  192.168.178.38 |                  |            11.11.11.6 |            | 54.54.54.6 | No     |
-| gemini    |                 |                  |            11.11.11.7 |            |            | No     |
-|-----------+-----------------+------------------+-----------------------+------------+------------+--------|
+|           |          MainIP |              wa0 |                   ha0 |        hp0 |        gs0 | Public | Desc      |
+|-----------+-----------------+------------------+-----------------------+------------+------------+--------+-----------|
+| [Tunnel]  |                 |        work area |             home area |  homeproxy | gamestream |        |           |
+| [Port]    |                 |            58210 |                 58211 |      58214 |      58254 |        |           |
+| [Target]  |                 | conker,bigbertha | all,-gemini,-alcatraz |        all |     conker |        |           |
+|-----------+-----------------+------------------+-----------------------+------------+------------+--------+-----------|
+| alcatraz  | 190.239.111.210 |       10.10.10.1 |            11.11.11.1 |            |            | Yes    | Work A    |
+| bigbertha | 190.239.111.110 |       10.10.10.2 |                       | 14.14.14.2 |            | Yes    | Work B    |
+| conker    | 190.239.111.111 |       10.10.10.3 |                       |            | 54.54.54.3 | Yes    | Home A    |
+| dilinger  |  192.168.178.25 |                  |            11.11.11.4 |            | 54.54.54.4 | No     | Home B    |
+| echtart   |  192.168.178.11 |                  |            11.11.11.5 | 14.14.14.5 | 54.54.54.5 | No     | Something |
+| frostlos  |  192.168.178.38 |                  |            11.11.11.6 |            | 54.54.54.6 | No     | Rpi4      |
+| gemini    |                 |                  |            11.11.11.7 |            |            | No     | Notes     |
+|-----------+-----------------+------------------+-----------------------+------------+------------+--------+-----------|
 
 
 The table specifies the following pieces of information:
@@ -334,13 +332,13 @@ Then generate the client configs and network map
   def populateTunnels():
       tunnel_map = {}
       ##tunnel_map["wb0"] = Tunnel("wb0", "work area", 58210)
-      tunnels = clients.loc[:, ~clients.columns.isin(["MainIP", "Public"])].filter(regex="^\[", axis=0).T
+      tunnels = clients.loc[:, ~clients.columns.isin(["MainIP", "Public", "Desc"])].filter(regex="^\[", axis=0).T
       for index, row in tunnels.iterrows():
           tunnel_map[row.name] = Tunnel(row.name, row["[Tunnel]"], row["[Port]"], row["[Target]"])
       return(tunnel_map)
 
   def addClientsToTunnels():
-      clmap = clients.loc[:, ~clients.columns.isin(["MainIP", "Public"])].filter(regex="^[^[]", axis=0)
+      clmap = clients.loc[:, ~clients.columns.isin(["MainIP", "Public", "Desc"])].filter(regex="^[^[]", axis=0)
       ## tunnel_map["wb0"].addClientToTunnel("kaktus", "10.10.10.1")
       list_tunnels = [x for x in clmap.columns]
       for index, row in clmap.iterrows():
